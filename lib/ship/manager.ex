@@ -38,6 +38,7 @@ defmodule Ship.Manager do
   # Declare all Systems to run
   def systems do
     [
+      Ship.Systems.ClientEventHandler,
       Ship.Systems.Destruction,
       Ship.Systems.CooldownExpiration,
       Ship.Systems.Attacking,

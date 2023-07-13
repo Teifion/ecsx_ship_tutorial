@@ -71,6 +71,7 @@ defmodule ShipWeb.Router do
       on_mount: [{ShipWeb.PlayerAuth, :ensure_authenticated}] do
       live "/players/settings", PlayerSettingsLive, :edit
       live "/players/settings/confirm_email/:token", PlayerSettingsLive, :confirm_email
+      live "/game", GameLive
     end
   end
 

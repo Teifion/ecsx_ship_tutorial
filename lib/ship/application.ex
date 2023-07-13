@@ -10,7 +10,7 @@ defmodule Ship.Application do
     children = [
       # Migrations
       {Ecto.Migrator,
-        repos: Application.fetch_env!(:apollo, :ecto_repos),
+        repos: Application.fetch_env!(:ship, :ecto_repos),
         skip: System.get_env("SKIP_MIGRATIONS") == "true"},
 
       # Start the Telemetry supervisor
