@@ -8,6 +8,11 @@ defmodule Ship.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      # Migrations
+      {Ecto.Migrator,
+        repos: Application.fetch_env!(:apollo, :ecto_repos),
+        skip: System.get_env("SKIP_MIGRATIONS") == "true"},
+
       # Start the Telemetry supervisor
       ShipWeb.Telemetry,
       # Start the Ecto repository
