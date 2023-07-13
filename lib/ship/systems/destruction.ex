@@ -17,6 +17,7 @@ defmodule Ship.Systems.Destruction do
   alias Ship.Components.XVelocity
   alias Ship.Components.YPosition
   alias Ship.Components.YVelocity
+  alias Ship.Components.ProjectileTarget
 
   @impl ECSx.System
   def run do
@@ -51,6 +52,10 @@ defmodule Ship.Systems.Destruction do
     for ship <- AttackTarget.search(target) do
       AttackTarget.remove(ship)
       SeekingTarget.add(ship)
+    end
+
+    for projectile <- ProjectileTarget.search(target) do
+      ProjectileTarget.remove(projectile)
     end
   end
 end

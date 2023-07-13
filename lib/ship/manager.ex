@@ -30,12 +30,16 @@ defmodule Ship.Manager do
       Ship.Components.YVelocity.add(entity, 0)
       Ship.Components.ImageFile.add(entity, "npc_ship.svg")
     end
+
     :ok
   end
 
   # Declare all valid Component types
   def components do
     [
+      Ship.Components.IsProjectile,
+      Ship.Components.ProjectileDamage,
+      Ship.Components.ProjectileTarget,
       Ship.Components.ImageFile,
       Ship.Components.PlayerSpawned,
       Ship.Components.DestroyedAt,
@@ -57,6 +61,7 @@ defmodule Ship.Manager do
   # Declare all Systems to run
   def systems do
     [
+      Ship.Systems.Projectile,
       Ship.Systems.ClientEventHandler,
       Ship.Systems.Destruction,
       Ship.Systems.CooldownExpiration,
