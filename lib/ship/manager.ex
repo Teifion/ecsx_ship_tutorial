@@ -19,7 +19,15 @@ defmodule Ship.Manager do
   # Declare all valid Component types
   def components do
     [
-      # MyApp.Components.SampleComponent
+      Ship.Components.AttackSpeed,
+      Ship.Components.YVelocity,
+      Ship.Components.XVelocity,
+      Ship.Components.YPosition,
+      Ship.Components.XPosition,
+      Ship.Components.AttackRange,
+      Ship.Components.AttackDamage,
+      Ship.Components.ArmorRating,
+      Ship.Components.HullPoints
     ]
   end
 
