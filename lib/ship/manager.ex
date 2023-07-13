@@ -19,6 +19,10 @@ defmodule Ship.Manager do
   # Declare all valid Component types
   def components do
     [
+      Ship.Components.DestroyedAt,
+      Ship.Components.AttackCooldown,
+      Ship.Components.AttackTarget,
+      Ship.Components.SeekingTarget,
       Ship.Components.AttackSpeed,
       Ship.Components.YVelocity,
       Ship.Components.XVelocity,
@@ -34,7 +38,11 @@ defmodule Ship.Manager do
   # Declare all Systems to run
   def systems do
     [
-      # MyApp.Systems.SampleSystem
+      Ship.Systems.Destruction,
+      Ship.Systems.CooldownExpiration,
+      Ship.Systems.Attacking,
+      Ship.Systems.Targeting,
+      Ship.Systems.Driver
     ]
   end
 end
