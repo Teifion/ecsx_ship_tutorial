@@ -51,7 +51,10 @@ defmodule Ship.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ecsx, "~> 0.4"},
-      {:ecsx_live_dashboard, "~> 0.1.0"}
+      {:ecsx_live_dashboard, "~> 0.1.0"},
+
+      {:ex_ulid, "~> 0.1.0"},
+      {:etop, "~> 0.7.0"},
     ]
   end
 

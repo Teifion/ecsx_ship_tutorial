@@ -54,6 +54,7 @@ defmodule ShipWeb do
       use Phoenix.LiveView,
         layout: {ShipWeb.Layouts, :app}
 
+      defguard is_connected?(socket) when socket.transport_pid != nil
       unquote(html_helpers())
     end
   end

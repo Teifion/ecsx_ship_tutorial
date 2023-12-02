@@ -1,0 +1,49 @@
+<div id="game" phx-window-keydown="keydown" phx-window-keyup="keyup">
+  <%= if @loading do %>
+    
+  <% else %>
+    ID: <%= @player_entity %>
+  <% end %>
+
+  <svg
+    viewBox={"#{@x_offset} #{@y_offset} #{@screen_width} #{@screen_height}"}
+    preserveAspectRatio="xMinYMin slice"
+  >
+    <rect width={@game_world_size} height={@game_world_size} fill="#72eff8" />
+
+    <%= if @loading do %>
+      <text x={div(@screen_width, 2)} y={div(@screen_height, 2)} style="font: 1px serif">
+        Loading...
+      </text>
+    <% else %>
+      <image
+        x={@x_coord}
+        y={@y_coord}
+        width="1"
+        height="1"
+        href={~p"/images/#{@player_ship_image_file}"}
+      />
+      <%= for {_entity, x, y, image_file} <- @projectiles do %>
+        <image
+          x={x}
+          y={y}
+          width="1"
+          height="1"
+          href={~p"/images/#{image_file}"}
+        />
+      <% end %>
+      <%= for {_entity, x, y, image_file} <- @other_ships do %>
+        <image
+          x={x}
+          y={y}
+          width="1"
+          height="1"
+          href={~p"/images/#{image_file}"}
+        />
+      <% end %>
+      <text x={@x_offset} y={@y_offset + 1} style="font: 1px serif">
+        Hull Points: <%= @current_hp %>
+      </text>
+    <% end %>
+  </svg>
+</div>

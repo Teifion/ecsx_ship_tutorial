@@ -1,4 +1,5 @@
 defmodule ShipWeb.GameLive do
+  require ShipWeb.GameLive
   use ShipWeb, :live_view
 
   alias Ship.Components.HullPoints
@@ -8,23 +9,45 @@ defmodule ShipWeb.GameLive do
   alias Ship.Components.ImageFile
   alias Ship.Components.IsProjectile
 
-  def mount(_params, %{"player_token" => token} = _session, socket) do
-    player = Ship.Players.get_player_by_session_token(token)
+  def mount(params, _session, socket) when is_connected?(socket) do
+    socket = cond do
+      socket.assigns.current_player ->
+        player_id = socket.assigns.current_player.id
 
-    socket =
-      socket
-      |> assign(player_entity: player.id)
-      |> assign(keys: MapSet.new())
-      # These will configure the scale of our display compared to the game world
-      |> assign(game_world_size: 100, screen_height: 30, screen_width: 50)
-      |> assign_loading_state()
+        ECSx.ClientEvents.add(player_id, :spawn_ship)
+        send(self(), :first_load)
 
-    if connected?(socket) do
-      ECSx.ClientEvents.add(player.id, :spawn_ship)
-      send(self(), :first_load)
+        socket
+        |> assign(player_entity: player_id)
+        |> assign(keys: MapSet.new())
+        |> assign_loading_state()
+
+      params["id"] ->
+        # player_id = String.to_integer(params["id"])
+        player_id = params["id"]
+
+        ECSx.ClientEvents.add(player_id, :spawn_ship)
+        send(self(), :first_load)
+
+        socket
+        |> assign(player_entity: player_id)
+        |> assign(keys: MapSet.new())
+        |> assign_loading_state()
+
+      true ->
+        # player_id = :rand.uniform(8_999_999_999_999) + 1_000_000_000_000
+        player_id = ExULID.ULID.generate()
+
+        redirect(socket, to: ~p"/game/#{player_id}")
     end
 
     {:ok, socket}
+  end
+
+  def mount(_params, _session, socket) do
+    {:ok, socket
+      |> assign_loading_state
+    }
   end
 
   def handle_info(:load_player_info, socket) do
@@ -112,7 +135,10 @@ defmodule ShipWeb.GameLive do
       x_offset: 0,
       y_offset: 0,
       loading: true,
-      projectiles: []
+      projectiles: [],
+      game_world_size: 100,
+      screen_height: 30,
+      screen_width: 50
     )
   end
 
@@ -180,54 +206,5 @@ defmodule ShipWeb.GameLive do
       offset when offset > game_world_size - screen_size -> game_world_size - screen_size
       offset -> offset
     end
-  end
-
-
-  def render(assigns) do
-    ~H"""
-    <div id="game" phx-window-keydown="keydown" phx-window-keyup="keyup">
-      <svg
-        viewBox={"#{@x_offset} #{@y_offset} #{@screen_width} #{@screen_height}"}
-        preserveAspectRatio="xMinYMin slice"
-      >
-        <rect width={@game_world_size} height={@game_world_size} fill="#72eff8" />
-
-        <%= if @loading do %>
-          <text x={div(@screen_width, 2)} y={div(@screen_height, 2)} style="font: 1px serif">
-            Loading...
-          </text>
-        <% else %>
-          <image
-            x={@x_coord}
-            y={@y_coord}
-            width="1"
-            height="1"
-            href={~p"/images/#{@player_ship_image_file}"}
-          />
-          <%= for {_entity, x, y, image_file} <- @projectiles do %>
-            <image
-              x={x}
-              y={y}
-              width="1"
-              height="1"
-              href={~p"/images/#{image_file}"}
-            />
-          <% end %>
-          <%= for {_entity, x, y, image_file} <- @other_ships do %>
-            <image
-              x={x}
-              y={y}
-              width="1"
-              height="1"
-              href={~p"/images/#{image_file}"}
-            />
-          <% end %>
-          <text x={@x_offset} y={@y_offset + 1} style="font: 1px serif">
-            Hull Points: <%= @current_hp %>
-          </text>
-        <% end %>
-      </svg>
-    </div>
-    """
   end
 end
