@@ -52,9 +52,9 @@ defmodule ShipWeb.GameLive do
 
   def handle_info(:load_player_info, socket) do
     # This will run every 50ms to keep the client assigns updated
-    x = XPosition.get_one(socket.assigns.player_entity)
-    y = YPosition.get_one(socket.assigns.player_entity)
-    hp = HullPoints.get_one(socket.assigns.player_entity)
+    x = XPosition.get(socket.assigns.player_entity)
+    y = YPosition.get(socket.assigns.player_entity)
+    hp = HullPoints.get(socket.assigns.player_entity)
 
     {:noreply, assign(socket, x_coord: x, y_coord: y, current_hp: hp)}
   end
@@ -153,10 +153,10 @@ defmodule ShipWeb.GameLive do
 
   # Our previous :load_player_info handler becomes a shared helper for the new handlers
   defp assign_player_ship(socket) do
-    x = XPosition.get_one(socket.assigns.player_entity)
-    y = YPosition.get_one(socket.assigns.player_entity)
-    hp = HullPoints.get_one(socket.assigns.player_entity)
-    image = ImageFile.get_one(socket.assigns.player_entity)
+    x = XPosition.get(socket.assigns.player_entity)
+    y = YPosition.get(socket.assigns.player_entity)
+    hp = HullPoints.get(socket.assigns.player_entity)
+    image = ImageFile.get(socket.assigns.player_entity)
 
     assign(socket, x_coord: x, y_coord: y, current_hp: hp, player_ship_image_file: image)
   end
@@ -170,9 +170,9 @@ defmodule ShipWeb.GameLive do
 
   defp all_ships do
     for {ship, _hp} <- HullPoints.get_all() do
-      x = XPosition.get_one(ship)
-      y = YPosition.get_one(ship)
-      image = ImageFile.get_one(ship)
+      x = XPosition.get(ship)
+      y = YPosition.get(ship)
+      image = ImageFile.get(ship)
       {ship, x, y, image}
     end
   end
@@ -180,9 +180,9 @@ defmodule ShipWeb.GameLive do
     defp assign_projectiles(socket) do
     projectiles =
       for projectile <- IsProjectile.get_all() do
-        x = XPosition.get_one(projectile)
-        y = YPosition.get_one(projectile)
-        image = ImageFile.get_one(projectile)
+        x = XPosition.get(projectile)
+        y = YPosition.get(projectile)
+        image = ImageFile.get(projectile)
         {projectile, x, y, image}
       end
 

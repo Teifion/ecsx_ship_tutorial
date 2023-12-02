@@ -50,7 +50,7 @@ defmodule Ship.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:ecsx, "~> 0.4"},
+      {:ecsx, "~> 0.5"},
       {:ecsx_live_dashboard, "~> 0.1.0"},
 
       {:ex_ulid, "~> 0.1.0"},
